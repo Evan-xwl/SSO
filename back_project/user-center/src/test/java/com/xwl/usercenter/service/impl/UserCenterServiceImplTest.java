@@ -1,5 +1,6 @@
 package com.xwl.usercenter.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.xwl.usercenter.model.domain.User;
 import com.xwl.usercenter.utils.StringMatchUtils;
 import org.junit.jupiter.api.Assertions;
@@ -40,5 +41,13 @@ class UserCenterServiceImplTest {
     void testRegisterUserParamSuccess () {
         long res = userCenterService.registerUser("abc1234", "12345678", "12345678");
         System.out.println(res);
+    }
+
+    @Test
+    void testLogicDelete () {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_name", "Evan");
+        boolean remove = userCenterService.remove(queryWrapper);
+        System.out.println(remove);
     }
 }
