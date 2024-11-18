@@ -2,12 +2,9 @@ import Footer from '@/components/Footer';
 import { login } from '@/services/ant-design-pro/api';
 import { getFakeCaptcha } from '@/services/ant-design-pro/login';
 import {
-  AlipayCircleOutlined,
   LockOutlined,
   MobileOutlined,
-  TaobaoCircleOutlined,
   UserOutlined,
-  WeiboCircleOutlined,
 } from '@ant-design/icons';
 import {
   LoginForm,
@@ -77,18 +74,12 @@ const Login: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.content}>
         <LoginForm
-          logo={<img alt="logo" src="/logo.svg" />}
-          title="Ant Design"
-          subTitle={'Ant Design 是西湖区最具影响力的 Web 设计规范'}
+          logo={<img className={styles.logoImg} alt="logo" src="/logo.png"/>}
+          title="若凌永远不困"
+          subTitle={'一切都是最好的安排，永远相信美好的事情即将发生~'}
           initialValues={{
             autoLogin: true,
           }}
-          actions={[
-            '其他登录方式 :',
-            <AlipayCircleOutlined key="AlipayCircleOutlined" className={styles.icon} />,
-            <TaobaoCircleOutlined key="TaobaoCircleOutlined" className={styles.icon} />,
-            <WeiboCircleOutlined key="WeiboCircleOutlined" className={styles.icon} />,
-          ]}
           onFinish={async (values) => {
             await handleSubmit(values as API.LoginParams);
           }}
@@ -181,10 +172,12 @@ const Login: React.FC = () => {
                   const result = await getFakeCaptcha({
                     phone,
                   });
-                  if (result === false) {
+                  // @ts-ignore
+                  if (result !== false) {
+                    message.success('获取验证码成功！验证码为：1234');
+                  } else {
                     return;
                   }
-                  message.success('获取验证码成功！验证码为：1234');
                 }}
               />
             </>
