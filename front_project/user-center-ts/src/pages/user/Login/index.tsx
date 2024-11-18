@@ -1,14 +1,28 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { LockOutlined, UserOutlined, GithubOutlined } from '@ant-design/icons';
 import {Button, Checkbox, Form, Input, Flex, Card, notification} from 'antd';
 import {useNavigate} from "react-router-dom";
 import type { NotificationArgsProps } from 'antd';
+import {request} from "../../../utils/index";
+import "./index.scss"
 
 type NotificationPlacement = NotificationArgsProps['placement'];
 const Login: React.FC = () => {
   const navigate = useNavigate();
-  const onFinish = (values: any) => {
-    navigate('/Main');
+  const [errorDisp, setErrorDisp] = useState(true);
+  const [errorText, setErrorText] = useState("");
+  const onFinish = async (values: any) => {
+    try {
+      const res = await request.post('/usercenter/login', values);
+      if (res.data && res.data.code === 1000) {
+        navigate("/Main")
+      } else {
+        setErrorText(res.data.msg);
+        setErrorDisp(false);
+      }
+    } catch (error) {
+      alert(error)
+    }
   };
   const componentStyles = {
     header: {
@@ -37,6 +51,7 @@ const Login: React.FC = () => {
 
   const [api, contextHolder] = notification.useNotification();
 
+
   const openNotification = (placement: NotificationPlacement) => {
     console.log("点击忘记密码")
     api.info({
@@ -46,6 +61,8 @@ const Login: React.FC = () => {
       placement,
     });
   };
+
+
 
   return (
       <div className="login">
@@ -77,7 +94,7 @@ const Login: React.FC = () => {
               onFinish={onFinish}
           >
             <Form.Item
-                name="username"
+                name="userAccount"
                 rules={[{ required: true, message: '账号不能为空!' }]}
                 label={"账号"}
             >
@@ -90,6 +107,7 @@ const Login: React.FC = () => {
             >
               <Input prefix={<LockOutlined />} type="password" placeholder="请输入您的密码" />
             </Form.Item>
+            <div hidden={errorDisp}  className="fail-msg">{errorText}</div>
             <Form.Item>
               <Flex justify="space-between" align="center">
                 <Form.Item name="remember" noStyle>
@@ -103,7 +121,7 @@ const Login: React.FC = () => {
               <Button block type="primary" htmlType="submit">
                 登录
               </Button>
-              <a href="/register">立即注册!</a>
+              <a href="/register" className="register">立即注册!</a>
             </Form.Item>
           </Form>
         </Card>

@@ -1,5 +1,6 @@
 package com.xwl.usercenter.controller;
 
+import com.xwl.usercenter.constant.RegisterEnum;
 import com.xwl.usercenter.constant.RespConstants;
 import com.xwl.usercenter.model.domain.User;
 import com.xwl.usercenter.model.dto.UserInfoResp;
@@ -7,10 +8,7 @@ import com.xwl.usercenter.model.vo.UserInfoReq;
 import com.xwl.usercenter.service.UserCenterService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -22,12 +20,14 @@ import javax.annotation.Resource;
 @Slf4j
 @RestController
 @RequestMapping("/usercenter")
+
 public class UserCenterController {
 
     @Resource
     private UserCenterService userCenterService;
 
     @PostMapping("/register")
+    @CrossOrigin
     public UserInfoResp userRegister (@RequestBody UserInfoReq userInfoReq) {
         if (userInfoReq == null) {
             return UserInfoResp.builder()
@@ -43,6 +43,12 @@ public class UserCenterController {
                     .build();
         }
         long userId = userCenterService.registerUser(userAccount, password, checkPassword);
+        if (userId < 0) {
+            return UserInfoResp.builder()
+                    .msg(RegisterEnum.getEnumByValue((int)userId).getDesc())
+                    .code(RespConstants.PARAM_INVALID)
+                    .build();
+        }
         return UserInfoResp.builder()
                 .data(userId)
                 .msg("用户id")
@@ -52,6 +58,7 @@ public class UserCenterController {
 
 
     @PostMapping("/login")
+    @CrossOrigin(origins = "*")
     public UserInfoResp userLogin (@RequestBody UserInfoReq userInfoReq) {
         if (userInfoReq == null) {
             return UserInfoResp.builder()

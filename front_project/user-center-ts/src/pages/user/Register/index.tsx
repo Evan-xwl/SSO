@@ -1,13 +1,27 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { LockOutlined, UserOutlined, GithubOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Flex, Card } from 'antd';
 import {useNavigate} from "react-router-dom";
 import "./index.scss"
+import {request} from "../../../utils/index";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
-  const onFinish = (values: any) => {
-    navigate('/RegisterRes');
+  const [errorDisp, setErrorDisp] = useState(true);
+  const [errorText, setErrorText] = useState("");
+  const onFinish = async (values: any) => {
+    try {
+      const res = await request.post('/usercenter/register', values);
+      if (res.data && res.data.code === 1000) {
+        navigate('/RegisterRes');
+      } else {
+        setErrorText(res.data.msg);
+        setErrorDisp(false);
+      }
+    } catch (error) {
+      alert(error)
+    }
+
   };
   const componentStyles = {
     header: {
@@ -63,7 +77,7 @@ const Register: React.FC = () => {
               onFinish={onFinish}
           >
             <Form.Item
-                name="username"
+                name="userAccount"
                 rules={[{ required: true, message: '账号不能为空!' }]}
                 label="账号"
             >
@@ -77,13 +91,13 @@ const Register: React.FC = () => {
               <Input prefix={<LockOutlined />} type="password" placeholder="请输入您的密码" />
             </Form.Item>
             <Form.Item
-                name="checkpwd"
+                name="checkPassword"
                 rules={[{ required: true, message: '密码不能为空!' }]}
                 label="确认密码"
             >
               <Input prefix={<LockOutlined />} type="password" placeholder="请再输入您的密码" />
             </Form.Item>
-
+            <div hidden={errorDisp}  className="fail-msg">{errorText}</div>
             <Form.Item>
               <Button block type="primary" htmlType="submit">
                 注册账号
