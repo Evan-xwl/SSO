@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import type { NotificationArgsProps } from 'antd';
 import {request} from "../../../utils/index";
 import "./index.scss"
+import "../../../index.scss"
 
 type NotificationPlacement = NotificationArgsProps['placement'];
 const Login: React.FC = () => {
@@ -125,9 +126,6 @@ const Login: React.FC = () => {
             </Form.Item>
           </Form>
         </Card>
-        <a href={"https://github.com/Evan-xwl/SSO"} className="link" target={"_blank"}>
-          <div className="bottom"><span>一起学习 </span><GithubOutlined /></div>
-        </a>
       </div>
   );
 };

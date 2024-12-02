@@ -2,8 +2,10 @@ import React, {useState} from 'react';
 import { LockOutlined, UserOutlined, GithubOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Flex, Card } from 'antd';
 import {useNavigate} from "react-router-dom";
-import "./index.scss"
+import "../Login/index.scss"
 import {request} from "../../../utils/index";
+import Footer from "../../../components/Footer/index";
+import Login from "../Login/index";
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -49,66 +51,69 @@ const Register: React.FC = () => {
   };
 
   return (
-      <div className="login">
-        <Card className="login-container"
-              title={
-                <div style={{
-                  textAlign: 'center',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  height: '100%',
-                  fontStyle: 'italic',
-                  color:'#CD5C5C',
-                  fontSize: '20px',
-                }}>欢迎注册账号</div>
-              }
-              bodyStyle={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: '300px' // 可以根据实际情况调整这个高度值，确保有足够空间让Form居中显示
-              }}
-        >
-          <Form
-              name="login"
-              initialValues={{ remember: true }}
-              style={{ maxWidth: 360 }}
-              onFinish={onFinish}
-          >
-            <Form.Item
-                name="userAccount"
-                rules={[{ required: true, message: '账号不能为空!' }]}
-                label="账号"
+      <div className="container">
+        <div className="login-mask">
+          <div className="login">
+            <Card className="login-container"
+                  title={
+                    <div style={{
+                      textAlign: 'center',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: '100%',
+                      fontStyle: 'italic',
+                      color:'#CD5C5C',
+                      fontSize: '20px',
+                    }}>欢迎注册账号</div>
+                  }
+                  bodyStyle={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    minHeight: '300px' // 可以根据实际情况调整这个高度值，确保有足够空间让Form居中显示
+                  }}
             >
-              <Input prefix={<UserOutlined />} placeholder="请输入您的账号" />
-            </Form.Item>
-            <Form.Item
-                name="password"
-                rules={[{ required: true, message: '密码不能为空!' }]}
-                label="密码"
-            >
-              <Input prefix={<LockOutlined />} type="password" placeholder="请输入您的密码" />
-            </Form.Item>
-            <Form.Item
-                name="checkPassword"
-                rules={[{ required: true, message: '密码不能为空!' }]}
-                label="确认密码"
-            >
-              <Input prefix={<LockOutlined />} type="password" placeholder="请再输入您的密码" />
-            </Form.Item>
-            <div hidden={errorDisp}  className="fail-msg">{errorText}</div>
-            <Form.Item>
-              <Button block type="primary" htmlType="submit">
-                注册账号
-              </Button>
-            </Form.Item>
-          </Form>
-        </Card>
-        <a href={"https://github.com/Evan-xwl/SSO"} className="link" target={"_blank"}>
-          <div className="bottom"><span>一起学习 </span><GithubOutlined /></div>
-        </a>
+              <Form
+                  name="login"
+                  initialValues={{ remember: true }}
+                  style={{ maxWidth: 360 }}
+                  onFinish={onFinish}
+              >
+                <Form.Item
+                    name="userAccount"
+                    rules={[{ required: true, message: '账号不能为空!' }]}
+                    label="账号"
+                >
+                  <Input prefix={<UserOutlined />} placeholder="请输入您的账号" />
+                </Form.Item>
+                <Form.Item
+                    name="password"
+                    rules={[{ required: true, message: '密码不能为空!' }]}
+                    label="密码"
+                >
+                  <Input prefix={<LockOutlined />} type="password" placeholder="请输入您的密码" />
+                </Form.Item>
+                <Form.Item
+                    name="checkPassword"
+                    rules={[{ required: true, message: '密码不能为空!' }]}
+                    label="确认密码"
+                >
+                  <Input prefix={<LockOutlined />} type="password" placeholder="请再输入您的密码" />
+                </Form.Item>
+                <div hidden={errorDisp}  className="fail-msg">{errorText}</div>
+                <Form.Item>
+                  <Button block type="primary" htmlType="submit">
+                    注册账号
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Card>
+          </div>
+        </div>
+        <Footer></Footer>
       </div>
+
   );
 };
 
