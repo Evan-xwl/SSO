@@ -14,6 +14,7 @@ const App = () => {
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const {foodList, activeIndex} = useSelector(state => state.foods);
+    const [loading, setLoading] = useState(true); // 加载状态
   useEffect(() => {
       // 1.获取用户信息
       //1.1 从URL中获取用户名（登录跳转时携带）
@@ -31,12 +32,14 @@ const App = () => {
                       }});
               if (response.data.username) {
                   setUsername(response.data.username);
+                  setLoading(false);
               } else {
                   console.log(response.request.responseURL)
                   window.location.href = response.request.responseURL
               }
           } catch (error) {
               console.error("There was an error fetching the userInfo!", error);
+          } finally {
           }
       }
       fetchData();
@@ -45,7 +48,9 @@ const App = () => {
       // dispatch(fetchUserInfo());
   }, [dispatch]);
 
-
+    if (loading) {
+        return null;
+    }
   return (
     <div className="home">
       {/* 导航 */}
