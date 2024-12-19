@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { LockOutlined, UserOutlined, GithubOutlined } from '@ant-design/icons';
 import {Button, Checkbox, Form, Input, Flex, Card, notification} from 'antd';
 import {useNavigate} from "react-router-dom";
@@ -6,17 +6,29 @@ import type { NotificationArgsProps } from 'antd';
 import {request} from "../../../utils/index";
 import "./index.scss"
 import "../../../index.scss"
-
 type NotificationPlacement = NotificationArgsProps['placement'];
 const Login: React.FC = () => {
+  const [source, setSource] = useState<string | null>(null);
+  useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        setSource(urlParams.get('source'));
+      }
+    ,[]);
   const navigate = useNavigate();
   const [errorDisp, setErrorDisp] = useState(true);
   const [errorText, setErrorText] = useState("");
   const onFinish = async (values: any) => {
     try {
-      const res = await request.post('/usercenter/login', values);
+      const res = await request.post(`/usercenter/login?source=${source}`, values);
       if (res.data && res.data.code === 1000) {
-        navigate("/Main")
+        //登录成功则根据source跳转到对应页面并附上用户信息
+        const sourceURL = res.data.redirectUrl;
+        if (sourceURL) {
+          window.location.href = sourceURL + "?username=" +res?.data?.data?.userName;
+        } else {
+          //无重定向则跳转主页面
+          navigate("/");
+        }
       } else {
         setErrorText(res.data.msg);
         setErrorDisp(false);

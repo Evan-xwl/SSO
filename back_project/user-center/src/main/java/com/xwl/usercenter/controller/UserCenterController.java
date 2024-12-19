@@ -11,6 +11,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @author ruoling
@@ -20,7 +22,6 @@ import javax.annotation.Resource;
 @Slf4j
 @RestController
 @RequestMapping("/usercenter")
-
 public class UserCenterController {
 
     @Resource
@@ -28,7 +29,7 @@ public class UserCenterController {
 
     @PostMapping("/register")
     @CrossOrigin
-    public UserInfoResp userRegister (@RequestBody UserInfoReq userInfoReq) {
+    public UserInfoResp userRegister(@RequestBody UserInfoReq userInfoReq) {
         if (userInfoReq == null) {
             return UserInfoResp.builder()
                     .code(RespConstants.PARAM_INVALID)
@@ -45,7 +46,7 @@ public class UserCenterController {
         long userId = userCenterService.registerUser(userAccount, password, checkPassword);
         if (userId < 0) {
             return UserInfoResp.builder()
-                    .msg(RegisterEnum.getEnumByValue((int)userId).getDesc())
+                    .msg(RegisterEnum.getEnumByValue((int) userId).getDesc())
                     .code(RespConstants.PARAM_INVALID)
                     .build();
         }
@@ -58,8 +59,10 @@ public class UserCenterController {
 
 
     @PostMapping("/login")
-    @CrossOrigin(origins = "*")
-    public UserInfoResp userLogin (@RequestBody UserInfoReq userInfoReq) {
+    @CrossOrigin
+    public UserInfoResp userLogin(@RequestBody UserInfoReq userInfoReq,
+                                  HttpServletResponse response,
+                                  @RequestParam(value = "source", required = false) String source) {
         if (userInfoReq == null) {
             return UserInfoResp.builder()
                     .code(RespConstants.PARAM_INVALID)
@@ -80,9 +83,18 @@ public class UserCenterController {
                     .code(RespConstants.PARAM_INVALID)
                     .build();
         }
-        return UserInfoResp.builder()
+        // 登录成功,判断登录来源，返回不同的重定向地址
+        UserInfoResp userInfoResp = UserInfoResp.builder()
                 .data(user)
                 .code(RespConstants.SUCCESS)
                 .build();
+        if (StringUtils.isNotBlank(source)) {
+            if ("edk".equals(source)) {
+                userInfoResp.setRedirectUrl("http://localhost:9981");
+            } else if ("eml".equals(source)) {
+                userInfoResp.setRedirectUrl("http://localhost:9982");
+            }
+        }
+        return userInfoResp;
     }
 }

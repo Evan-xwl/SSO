@@ -1,35 +1,27 @@
 import React from 'react';
-import { Carousel } from 'antd';
+import "./index.scss"
 
-const contentStyle: React.CSSProperties = {
-    margin: 0,
-    height: '360px',
-    color: '#fff',
-    lineHeight: '160px',
-    textAlign: 'center',
-    background: '#364d79',
-};
 
 const Main: React.FC = () => {
-    const onChange = (currentSlide: number) => {
-        console.log(currentSlide);
+    const goMeiDiHen = () => {
+        window.location.href = 'http://localhost:9981';
+    };
+
+    const goEdekuai = () => {
+        window.location.href = 'http://localhost:9981';
     };
 
     return (
-        <Carousel afterChange={onChange}>
-            <div>
-                <h3 style={contentStyle}>这</h3>
+            <div className="main">
+                <div className="header-main"/>
+                <div className="content-main">
+                    <div className="beauty" onClick={goMeiDiHen}>美滴很</div>
+                    <img src={"/main-direction.png"} alt={"左箭头"} className="img-left"/>
+                    <img src={"/SpongeBob.png"} alt={"主图"} className="img-main"/>
+                    <img src={"/main-direction.png"} alt={"右箭头"} className="img-right"/>
+                    <div className="hungry" onClick={goEdekuai}>饿滴快</div>
+                </div>
             </div>
-            <div>
-                <h3 style={contentStyle}>是</h3>
-            </div>
-            <div>
-                <h3 style={contentStyle}>主</h3>
-            </div>
-            <div>
-                <h3 style={contentStyle}>页</h3>
-            </div>
-        </Carousel>
     );
 };
 

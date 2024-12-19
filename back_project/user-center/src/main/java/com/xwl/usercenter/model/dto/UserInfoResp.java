@@ -22,5 +22,5 @@ public class UserInfoResp {
 
     private int code;
 
-
+    private String redirectUrl;
 }
