@@ -6,13 +6,19 @@ import com.xwl.usercenter.model.domain.User;
 import com.xwl.usercenter.model.dto.UserInfoResp;
 import com.xwl.usercenter.model.vo.UserInfoReq;
 import com.xwl.usercenter.service.UserCenterService;
+import com.xwl.usercenter.utils.JwtUtils;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author ruoling
@@ -61,7 +67,6 @@ public class UserCenterController {
     @PostMapping("/login")
     @CrossOrigin
     public UserInfoResp userLogin(@RequestBody UserInfoReq userInfoReq,
-                                  HttpServletResponse response,
                                   @RequestParam(value = "source", required = false) String source) {
         if (userInfoReq == null) {
             return UserInfoResp.builder()
@@ -88,13 +93,37 @@ public class UserCenterController {
                 .data(user)
                 .code(RespConstants.SUCCESS)
                 .build();
+        // 生成jwt
+        Map<String, Object> data = new HashMap<>();
+        data.put("username", user.getUserName());
+        String token = JwtUtils.createJwt(data, 10);
         if (StringUtils.isNotBlank(source)) {
             if ("edk".equals(source)) {
-                userInfoResp.setRedirectUrl("http://localhost:9981");
-            } else if ("eml".equals(source)) {
-                userInfoResp.setRedirectUrl("http://localhost:9982");
+                userInfoResp.setRedirectUrl("http://localhost:9981?token=" + token);
+            } else if ("mdh".equals(source)) {
+                userInfoResp.setRedirectUrl("http://localhost:9982?token=" + token);
             }
         }
         return userInfoResp;
+    }
+
+    @GetMapping("/confirmLogin")
+    public UserInfoResp confirmLogin(String token) {
+        Object username = null;
+        try {
+            Claims claims = JwtUtils.getJwt(token);
+            username = claims.get("username");
+        } catch (Exception e) {
+            System.out.println(e + "jwt解析错误");//todo 打印日志
+        }
+        if (username != null) {
+            return UserInfoResp.builder()
+                    .data(username)
+                    .code(RespConstants.SUCCESS)
+                    .build();
+        }
+        return UserInfoResp.builder()
+                .code(RespConstants.PARAM_INVALID)
+                .build();
     }
 }

@@ -6,10 +6,12 @@
 }
 
 .header-main {
+  margin-top: 50px;
   width: 600px;
-  height: 200px;
+  height: 150px;
   background-image: url("/main-header.png");
-  background-size: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
   margin-bottom: 50px;
 }
 

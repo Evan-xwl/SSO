@@ -15,5 +15,5 @@ import lombok.NoArgsConstructor;
 public class ClientResponse {
     private String username;
     private String msg;
-    private String code;
+    private int code;
 }

@@ -19,10 +19,9 @@ const App = () => {
       // 1.获取用户信息
       //1.1 从URL中获取用户名（登录跳转时携带）
       const urlParams = new URLSearchParams(window.location.search);
-      setUsername(urlParams.get("username"));
       async function fetchData() {
           const formData = new FormData();
-          formData.append('username', urlParams.get("username"));
+          formData.append('token', urlParams.get("token"));
           try {
               const response = await axios.post(`http://localhost:8081/client/msg`,
                   formData
@@ -35,11 +34,10 @@ const App = () => {
                   setLoading(false);
               } else {
                   console.log(response.request.responseURL)
-                  window.location.href = response.request.responseURL
+                  window.location.href = response.request.responseURL + "?source=edk";
               }
           } catch (error) {
               console.error("There was an error fetching the userInfo!", error);
-          } finally {
           }
       }
       fetchData();

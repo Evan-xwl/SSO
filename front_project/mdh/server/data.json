@@ -1,0 +1,113 @@
+{
+  "takeaway": [
+    {
+      "tag": "318569657",
+      "name": "招牌奶茶",
+      "foods": [
+        {
+          "id": 8078956697,
+          "name": "鲜奶茉莉奶绿",
+          "like_ratio_desc": "好评度100%",
+          "month_saled": 40,
+          "unit": "大杯",
+          "food_tag_list": ["点评网友推荐"],
+          "price": 19.9,
+          "picture": "mlnl.png",
+          "description": "",
+          "tag": "318569657",
+          "count": 1
+        },
+        {
+          "id": 7384994864,
+          "name": "杨枝甘露",
+          "like_ratio_desc": "好评度81%",
+          "month_saled": 99,
+          "unit": "1人份",
+          "food_tag_list": [],
+          "price": 9.8,
+          "picture": "yzgl.png",
+          "description": "",
+          "tag": "318569657",
+          "count": 1
+        },
+        {
+          "id": 2305772036,
+          "name": "芋泥波波奶茶",
+          "like_ratio_desc": "好评度91%",
+          "month_saled": 300,
+          "unit": "1人份",
+          "food_tag_list": [],
+          "price": 14.9,
+          "picture": "ynbb.png",
+          "description": "主料：芋圆、麻薯、鲜奶",
+          "tag": "318569657",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "tag": "82022594",
+      "name": "益生菌",
+      "foods": [
+        {
+          "id": 3823780596,
+          "name": "芭乐酸奶昔",
+          "like_ratio_desc": "",
+          "month_saled": 200,
+          "unit": "中杯",
+          "food_tag_list": ["网友推荐"],
+          "price": 6,
+          "picture": "snx.png",
+          "description": "冻冻、营养",
+          "tag": "82022594",
+          "count": 1
+        },
+        {
+          "id": 6592009498,
+          "name": "酸奶紫米露",
+          "like_ratio_desc": "",
+          "month_saled": 50,
+          "unit": "1人份",
+          "food_tag_list": [],
+          "price": 16.9,
+          "picture": "zml.png",
+          "description": "血糯米",
+          "tag": "82022594",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "tag": "98147100",
+      "name": "小料专区",
+      "foods": [
+        {
+          "id": 4056954171,
+          "name": "芋泥",
+          "like_ratio_desc": "",
+          "month_saled": 1000,
+          "unit": "约50克",
+          "food_tag_list": [],
+          "price": 5,
+          "picture": "yn.png",
+          "description": "软糯Q弹有嚼劲",
+          "tag": "98147100",
+          "count": 1
+        },
+        {
+          "id": 740430262,
+          "name": "芝士奶盖",
+          "like_ratio_desc": "好评度100%",
+          "month_saled": 100,
+          "unit": "一杯",
+          "food_tag_list": [],
+          "price": 10,
+          "picture": "ng.png",
+          "description": "柔软蓬松，葡萄干和蔓越莓酸甜适口",
+          "tag": "98147100",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

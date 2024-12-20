@@ -24,7 +24,7 @@ const Login: React.FC = () => {
         //登录成功则根据source跳转到对应页面并附上用户信息
         const sourceURL = res.data.redirectUrl;
         if (sourceURL) {
-          window.location.href = sourceURL + "?username=" +res?.data?.data?.userName;
+          window.location.href = sourceURL;
         } else {
           //无重定向则跳转主页面
           navigate("/");

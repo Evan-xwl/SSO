@@ -4,7 +4,7 @@ import "./index.scss"
 
 const Main: React.FC = () => {
     const goMeiDiHen = () => {
-        window.location.href = 'http://localhost:9981';
+        window.location.href = 'http://localhost:9982';
     };
 
     const goEdekuai = () => {
