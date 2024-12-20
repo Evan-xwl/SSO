@@ -13,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -32,6 +34,8 @@ public class UserCenterController {
 
     @Resource
     private UserCenterService userCenterService;
+
+    private static final String cookieKey = "au-token";
 
     @PostMapping("/register")
     @CrossOrigin
@@ -65,9 +69,10 @@ public class UserCenterController {
 
 
     @PostMapping("/login")
-    @CrossOrigin
+    @CrossOrigin(origins = {"http://localhost:9980"}, allowCredentials = "true")
     public UserInfoResp userLogin(@RequestBody UserInfoReq userInfoReq,
-                                  @RequestParam(value = "source", required = false) String source) {
+                                  @RequestParam(value = "source", required = false) String source,
+                                  HttpServletResponse response) {
         if (userInfoReq == null) {
             return UserInfoResp.builder()
                     .code(RespConstants.PARAM_INVALID)
@@ -97,6 +102,11 @@ public class UserCenterController {
         Map<String, Object> data = new HashMap<>();
         data.put("username", user.getUserName());
         String token = JwtUtils.createJwt(data, 10);
+        // 以cookie形式返回
+        Cookie cookie = new Cookie(cookieKey, token);
+        cookie.setPath("/");
+        cookie.setMaxAge(60);
+        response.addCookie(cookie);
         if (StringUtils.isNotBlank(source)) {
             if ("edk".equals(source)) {
                 userInfoResp.setRedirectUrl("http://localhost:9981?token=" + token);
@@ -108,10 +118,15 @@ public class UserCenterController {
     }
 
     @GetMapping("/confirmLogin")
-    public UserInfoResp confirmLogin(String token) {
+    @CrossOrigin
+    public UserInfoResp confirmLogin(String token, HttpServletRequest request) {
+        String actualToken = token;
+        if (getCookieValue(request, cookieKey) != null) {
+            actualToken = getCookieValue(request, cookieKey);
+        }
         Object username = null;
         try {
-            Claims claims = JwtUtils.getJwt(token);
+            Claims claims = JwtUtils.getJwt(actualToken);
             username = claims.get("username");
         } catch (Exception e) {
             System.out.println(e + "jwt解析错误");//todo 打印日志
@@ -119,11 +134,29 @@ public class UserCenterController {
         if (username != null) {
             return UserInfoResp.builder()
                     .data(username)
+                    .msg(token)
                     .code(RespConstants.SUCCESS)
                     .build();
         }
         return UserInfoResp.builder()
                 .code(RespConstants.PARAM_INVALID)
                 .build();
+    }
+
+    private String getCookieValue(HttpServletRequest request, String cookieKey) {
+        if (request == null || cookieKey == null) {
+            return null;
+        }
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookieKey.equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+
+        return null; // 如果没有找到对应的 Cookie，则返回 null
     }
 }

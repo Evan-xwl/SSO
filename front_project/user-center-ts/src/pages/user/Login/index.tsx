@@ -10,8 +10,18 @@ type NotificationPlacement = NotificationArgsProps['placement'];
 const Login: React.FC = () => {
   const [source, setSource] = useState<string | null>(null);
   useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        setSource(urlParams.get('source'));
+      // 1.检验是否需要登录
+    let msg = "initial";
+    const checkLogin = async () => {
+      const res = await request.get('/usercenter/confirmLogin?token=0');
+      if (res.data.msg) {
+        msg = res.data.msg;
+      }
+    }
+    const urlParams = new URLSearchParams(window.location.search);
+    setSource(urlParams.get('source'));
+    checkLogin();
+    console.log("token=" + msg)
       }
     ,[]);
   const navigate = useNavigate();
@@ -19,12 +29,15 @@ const Login: React.FC = () => {
   const [errorText, setErrorText] = useState("");
   const onFinish = async (values: any) => {
     try {
-      const res = await request.post(`/usercenter/login?source=${source}`, values);
+      const res = await request.post(`/usercenter/login?source=${source}`, values,
+          {
+            withCredentials: true
+          });
       if (res.data && res.data.code === 1000) {
         //登录成功则根据source跳转到对应页面并附上用户信息
         const sourceURL = res.data.redirectUrl;
         if (sourceURL) {
-          window.location.href = sourceURL;
+          // window.location.href = sourceURL;
         } else {
           //无重定向则跳转主页面
           navigate("/");

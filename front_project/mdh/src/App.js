@@ -16,13 +16,22 @@ const App = () => {
   const {foodList, activeIndex} = useSelector(state => state.foods);
     const [loading, setLoading] = useState(true); // 加载状态
   useEffect(() => {
+      let token = "";
       // 1.获取用户信息
       //1.1 从URL中获取用户名（登录跳转时携带）
       const urlParams = new URLSearchParams(window.location.search);
-      setUsername(urlParams.get("username"));
       async function fetchData() {
+          if (localStorage.getItem("token") !== "null") {
+              token = localStorage.getItem("token");
+          }else {
+              token = urlParams.get("token");
+              console.log("urlParams" + token)
+              if (token !== null && token !== "null") {
+                  localStorage.setItem("token", token);
+              }
+          }
           const formData = new FormData();
-          formData.append('username', urlParams.get("username"));
+          formData.append('token', token);
           try {
               const response = await axios.post(`http://localhost:8082/client/msg`,
                   formData
